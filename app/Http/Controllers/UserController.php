@@ -6,10 +6,20 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    
     public function index()
     {
-        return '<h1>Usuarios</h1>';
+        $users = [
+            'Joel',
+            'Ellie',
+            'Test',
+            'Tommy',
+            'Bill',
+            '<script>alert("click aquí")</script>'
+        ];
+
+        $title = 'Usuarios';
+
+        return view('users') -> with(compact('users', 'title'));
     }
 
     public function create()
