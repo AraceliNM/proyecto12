@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,10 +16,10 @@ class UsersModuleTest extends TestCase
     public function it_shows_the_users_list()
     {
         factory(User::class)->create([
-           'name' => 'Joel',
+            'name' => 'Joel',
         ]);
         factory(User::class)->create([
-            'name' => 'Ellie',
+            'name' => 'Ellie'
         ]);
 
         $this->get('usuarios')
@@ -38,7 +39,7 @@ class UsersModuleTest extends TestCase
     }
 
     /** @test */
-    public function it_displays_the_users_details()
+    public function it_displays_the_user_details()
     {
         $user = factory(User::class)->create([
             'name' => 'José Martínez',
@@ -84,17 +85,14 @@ class UsersModuleTest extends TestCase
     /** @test */
     public function the_name_is_required()
     {
-        $this->withExceptionHandling();
-
-        $this->post('usuarios', [
+        $this->from('usuarios/crear')
+            ->post('usuarios', [
             'name' => '',
             'email' => 'emilio@mail.es',
             'password' => '123456'
         ])->assertRedirect('usuarios/crear')
             ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
 
-        $this->assertDatabaseMissing('users', [
-            'email' => 'emilio@mail.es',
-        ]);
+        $this->assertEquals(0, User::count());
     }
 }

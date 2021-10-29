@@ -11,10 +11,10 @@
         <label for="name">Nombre:</label>
         <input type="text" name="name">
         <br>
-        <label for="email">Correo Electrónico:</label>
+        <label for="email">Correo Electrónico</label>
         <input type="email" name="email">
         <br>
-        <label for="password">Contraseña:</label>
+        <label for="password">Contraseña: </label>
         <input type="password" name="password">
         <br>
         <button type="submit">Crear usuario</button>

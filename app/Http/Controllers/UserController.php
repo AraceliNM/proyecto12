@@ -15,9 +15,9 @@ class UserController extends Controller
 
         return view('users.index')->with(compact('users', 'title'));
 
-//        return view('users.index')
-//            ->with('users', User::all())
-//            ->with('title', 'Listado de Usuarios');
+        /*return view('users.index')
+            ->with('users', User::all())
+            ->with('title', 'Listado de Usuarios');*/
     }
 
     public function create()
@@ -27,12 +27,11 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        if (empty($request->name)) {
-            return redirect()->route('users.create')
-                ->withErrors([
-                    'name' => 'El campo nombre es obligatorio'
-                ]);
-        }
+        $data = $request->validate([
+            'name' => 'required'
+        ], [
+            'name.required' => 'El campo nombre es obligatorio'
+        ]);
 
         User::create([
             'name' => $request->name,
