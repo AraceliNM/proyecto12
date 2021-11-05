@@ -88,6 +88,7 @@ class UsersModuleTest extends TestCase
     /** @test */
     public function the_twitter_field_is_optional()
     {
+        $this->withoutExceptionHandling();
         $this->post('usuarios', $this->getValidData([
             'twitter' => null
         ]))->assertRedirect('usuarios');
@@ -110,10 +111,10 @@ class UsersModuleTest extends TestCase
     {
         $this->from('usuarios/crear')
             ->post('usuarios', [
-            'name' => '',
-            'email' => 'emilio@mail.es',
-            'password' => '123456'
-        ])->assertRedirect('usuarios/crear')
+                'name' => '',
+                'email' => 'emilio@mail.es',
+                'password' => '123456'
+            ])->assertRedirect('usuarios/crear')
             ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
 
         $this->assertEquals(0, User::count());
@@ -165,7 +166,7 @@ class UsersModuleTest extends TestCase
     public function the_email_must_be_unique()
     {
         factory(User::class)->create([
-            'email' => 'pepe@mail.es'
+            'email' => 'pepe@mail.es',
         ]);
 
         $this->from('usuarios/crear')
@@ -216,12 +217,12 @@ class UsersModuleTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => '',
                 'email' => 'pepe@mail.es',
                 'password' => '123456'
-            ])->assertRedirect('usuarios/' . $user->id .'/editar')
+            ])->assertRedirect('usuarios/' . $user->id . '/editar')
             ->assertSessionHasErrors(['name']);
 
         $this->assertDatabaseMissing('users', ['email' => 'pepe@mail.es']);
@@ -232,12 +233,12 @@ class UsersModuleTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => 'Pepe',
                 'email' => '',
                 'password' => '123456'
-            ])->assertRedirect('usuarios/' . $user->id .'/editar');
+            ])->assertRedirect('usuarios/' . $user->id . '/editar');
 
         $this->assertDatabaseMissing('users', ['name' => 'Pepe']);
     }
@@ -247,12 +248,12 @@ class UsersModuleTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => 'Pepe',
                 'email' => 'correo-no-valido',
                 'password' => '123456'
-            ])->assertRedirect('usuarios/' . $user->id .'/editar')
+            ])->assertRedirect('usuarios/' . $user->id . '/editar')
             ->assertSessionHasErrors('email');
 
         $this->assertDatabaseMissing('users', ['name' => 'Pepe']);
@@ -265,15 +266,15 @@ class UsersModuleTest extends TestCase
             'email' => 'existing_email@mail.es'
         ]);
         $user = factory(User::class)->create([
-            'email' => 'pepe@mail.es'
+            'email' => 'pepe@mail.es',
         ]);
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => 'Pepe',
                 'email' => 'existing_email@mail.es',
                 'password' => '123456'
-            ])->assertRedirect('usuarios/' . $user->id .'/editar')
+            ])->assertRedirect('usuarios/' . $user->id . '/editar')
             ->assertSessionHasErrors('email');
     }
 
@@ -282,11 +283,11 @@ class UsersModuleTest extends TestCase
     {
         $oldPassword = 'CLAVE_ANTERIOR';
         $user = factory(User::class)->create([
-            'password' => bcrypt($oldPassword)
+            'password' => bcrypt($oldPassword),
         ]);
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => 'Pepe',
                 'email' => 'pepe@mail.es',
                 'password' => ''
@@ -306,8 +307,8 @@ class UsersModuleTest extends TestCase
             'email' => 'pepe@mail.es',
         ]);
 
-        $this->from('usuarios/' . $user->id .'/editar')
-            ->put('usuarios/' .$user->id, [
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
                 'name' => 'Pepe',
                 'email' => 'pepe@mail.es',
                 'password' => '123456'
@@ -333,7 +334,7 @@ class UsersModuleTest extends TestCase
             'id' => $user->id,
         ]);
 
-        //$this->assertSame(0, User::count());;
+        //$this->assertSame(0, User::count());
     }
 
     public function getValidData(array $custom = [])
@@ -347,3 +348,4 @@ class UsersModuleTest extends TestCase
         ], $custom));
     }
 }
+
