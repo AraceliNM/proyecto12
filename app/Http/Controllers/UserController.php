@@ -27,7 +27,7 @@ class UserController extends Controller
                 }
             })
             ->filterBy($userFilter, request()->only(['state', 'role', 'search', 'skills', 'from', 'to']))
-            ->orderBy('created_at', 'DESC')
+            ->orderBy(request('order'), request('direction', 'asc'))
             ->paginate();
 
         $users->appends($userFilter->valid());

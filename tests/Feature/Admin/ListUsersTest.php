@@ -101,4 +101,34 @@ class ListUsersTest extends TestCase
                 'Primer usuario'
             ])->assertDontSee('Tercer usuario');
     }
+
+    /** @test */
+    public function users_are_ordered_by_name_in_ascendent_direction()
+    {
+        factory(User::class)->create(['first_name' => 'John Doe']);
+        factory(User::class)->create(['first_name' => 'Richard Roe']);
+        factory(User::class)->create(['first_name' => 'Jane Doe']);
+
+        $this->get('usuarios?order=first_name&direction=asc')
+            ->assertSeeInOrder([
+                'Jane Doe',
+                'John Doe',
+                'Richard Roe'
+            ]);
+    }
+
+    /** @test */
+    public function users_are_ordered_by_name_in_descendent_direction()
+    {
+        factory(User::class)->create(['first_name' => 'John Doe']);
+        factory(User::class)->create(['first_name' => 'Richard Roe']);
+        factory(User::class)->create(['first_name' => 'Jane Doe']);
+
+        $this->get('usuarios?order=first_name&direction=desc')
+            ->assertSeeInOrder([
+                'Richard Roe',
+                'John Doe',
+                'Jane Doe',
+            ]);
+    }
 }
